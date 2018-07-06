@@ -80,6 +80,21 @@ Conflicts are not an error condition - it's just the database's way of preventin
 
 This tool provides a simplistic solution to fix documents that have become conflicted and need all but one revision deleting. A document with two many conflicts can cause performance problems for a database, so it's good practice to resolve them.
 
+## Making conflicts 
+
+The easiest way to create a conflicted document is to write multiple revisions with `new_edits: false` using the `POST /db/_bulk_docs` method:
+
+```sh
+# Your CouchDB/Cloudant URL goes here
+URL='http://localhost:5984/mydb'
+# Create the database
+curl -X PUT "$URL"
+# JSON to create multiple revisons of the same document
+JSON='{"new_edits":false,"docs":[{"_id":"mydoc","_rev":"1-1","a":0},{"_id":"mydoc","_rev":"1-2","a":1},{"_id":"mydoc","_rev":"1-3","a":2}]}'
+# Make _bulk_docs request
+curl -v -X POST -H 'Content-type:application/json' -d "$JSON" "$URL/_bulk_docs"
+```
+
 ## Further reading
 
 - [CouchDB docs](http://docs.couchdb.org/en/2.1.1/replication/conflicts.html?highlight=conflict)
