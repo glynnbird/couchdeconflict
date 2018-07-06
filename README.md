@@ -50,6 +50,7 @@ Deletions are processed in batches of 100, although this can be overridden with 
 * `-u`/`--url` (required) - the URL of the document to treat e.g. `https://U:P@host.cloudant.com/mydb/mydoc` or `http://localhost:5984/mydb/mydoc`
 * `-k`/`--keep` - the revision token that is to be left as the winner at the end of the process. If not supplied, the current winning revision is chosen.
 * `-b`/`--batch` - the number of deletions processed per API call. Defaults to 100.
+* `-d`/`--dryrun` - output the revisions that *would* be deleted, but don't actually delete them.
 * `-v`/`--verbose` - display verbose output. Default to true
 * `--help` - display help
 * `--version` - display current version

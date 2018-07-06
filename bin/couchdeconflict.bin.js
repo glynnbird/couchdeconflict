@@ -13,6 +13,7 @@ var argv = require('yargs')
   .option('batch', {alias: 'b', describe: 'The batch size of deletions to perform in one HTTP call', demandOption: false, default: 100})
   .option('keep', {alias: 'k', describe: 'Keep this revision', demandOption: false, default: null})
   .option('verbose', {alias: 'v', describe: 'Show running commentary', demandOption: false, default: true})
+  .option('dryrun', {alias: 'd', describe: 'Output what would be done without actually doing it', demandOption: false, default: false})
   .help('help')
   .argv
 
@@ -23,7 +24,7 @@ if (!parsed.protocol) {
 }
 var slashes = parsed.pathname.match(/\//g)
 if (!slashes || slashes.length !== 2) {
-  die('url must contain path to document e.g. http://localhost:5984/mydb/mydoc', 1)
+  die('url must contain path to document e.g. http://localhost:5984/mydb/mydoc', 2)
 }
 
 // deconflict the document

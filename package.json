@@ -1,6 +1,6 @@
 {
   "name": "couchdeconflict",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CouchDB conflict cleanup utility",
   "main": "index.js",
   "bin": {

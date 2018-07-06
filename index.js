@@ -28,22 +28,29 @@ var processDeletions = function (opts) {
       function (callback) {
         var b = opts.deletions.splice(0, opts.batch)
         if (b.length > 0) {
-          var r = {
-            method: 'POST',
-            url: opts.url.replace(/\/[^/]+$/, '/_bulk_docs'),
-            json: true,
-            body: { docs: b }
+          if (opts.dryrun) {
+            b.forEach((doc) => {
+              console.log('DELETE ' + JSON.stringify(doc))
+            })
+            callback()
+          } else {
+            var r = {
+              method: 'POST',
+              url: opts.url.replace(/\/[^/]+$/, '/_bulk_docs'),
+              json: true,
+              body: { docs: b }
+            }
+            if (opts.verbose) {
+              progress(deletionCount, deletionAim)
+            }
+            request(r).then((data) => {
+              deletionCount += b.length
+              callback(null, data)
+            }).catch((e) => {
+              console.log('! ', e)
+              callback(e)
+            })
           }
-          if (opts.verbose) {
-            progress(deletionCount, deletionAim)
-          }
-          request(r).then((data) => {
-            deletionCount += b.length
-            callback(null, data)
-          }).catch((e) => {
-            console.log('! ', e)
-            callback(e)
-          })
         } else {
           callback(null)
         }
@@ -52,7 +59,7 @@ var processDeletions = function (opts) {
         return (opts.deletions.length > 1)
       },
       function (err, data) {
-        if (opts.verbose) {
+        if (opts.verbose && !opts.dryrun) {
           progress(deletionCount, deletionAim)
           console.log('')
         }
@@ -81,6 +88,9 @@ var decon = function (opts) {
   }
   if (typeof opts.keep === 'undefined') {
     opts.keep = null
+  }
+  if (typeof opts.keep === 'undefined') {
+    opts.dryrun = false
   }
 
   // fetch the document with list of conflicts
