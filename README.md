@@ -17,7 +17,7 @@ npm install -g couchdeconflict
 If you have a the URL of the document that needs deconflicting, simply pass that to `couchdeconflict` as the `-u`/`--url` parameter:
 
 ```sh
-> deconflict -u http://localhost:5984/mydb/mydoc
+> couchdeconflict -u http://localhost:5984/mydb/mydoc
 couchdeconflict
 ---------------
 options: {"url":"http://localhost:5984/mydb/mydoc","keep":null,"batch":100}
@@ -32,7 +32,7 @@ You may also supply a URL with credentials e.g. `https://U:P@host.cloudant.com/m
 If you wish to keep a revision other than the current winning revision, simply pass the revision token as a `-k`/`--keep` parameter:
 
 ```sh
-> deconflict --url http://localhost:5984/mydb/mydoc  --keep 1-111
+> couchdeconflict --url http://localhost:5984/mydb/mydoc  --keep 1-111
 couchdeconflict
 ---------------
 options: {"url":"http://###:###@localhost:5984/mydb/mydoc","keep":"1-111","batch":100}
