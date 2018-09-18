@@ -1,6 +1,6 @@
 {
   "name": "couchdeconflict",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CouchDB conflict cleanup utility",
   "main": "index.js",
   "bin": {
@@ -27,9 +27,9 @@
   "homepage": "https://github.com/glynnbird/couchdeconflict#readme",
   "dependencies": {
     "async": "^2.6.1",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "request-promise": "^4.2.2",
-    "yargs": "^12.0.1"
+    "yargs": "^12.0.2"
   },
   "devDependencies": {
     "standard": "^10.0.3"
