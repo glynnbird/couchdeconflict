@@ -1,8 +1,8 @@
 
-var request = require('request-promise')
-var async = require('async')
+const request = require('request-promise')
+const async = require('async')
 
-var getDoc = function (url) {
+const getDoc = function (url) {
   return request({
     method: 'get',
     json: true,
@@ -14,19 +14,19 @@ var getDoc = function (url) {
 }
 
 // opts - { url: '' , keep: '', batch: 100, verbose: false, deletions: [] }
-var processDeletions = function (opts) {
-  var deletionAim = opts.deletions.length
-  var deletionCount = 0
-  var progress = function (x, y) {
-    var percent = 100 * x / y
-    var charCount = Math.floor(percent / 2)
-    var p = '[' + '='.repeat(charCount) + '-'.repeat(50 - charCount) + ']'
+const processDeletions = function (opts) {
+  const deletionAim = opts.deletions.length
+  let deletionCount = 0
+  const progress = function (x, y) {
+    const percent = 100 * x / y
+    const charCount = Math.floor(percent / 2)
+    const p = '[' + '='.repeat(charCount) + '-'.repeat(50 - charCount) + ']'
     process.stdout.write('  ' + p + ' ' + Math.floor(percent) + '% ' + x + '/' + y + '           \r')
   }
   return new Promise((resolve, reject) => {
     async.doWhilst(
       function (callback) {
-        var b = opts.deletions.splice(0, opts.batch)
+        const b = opts.deletions.splice(0, opts.batch)
         if (b.length > 0) {
           if (opts.dryrun) {
             b.forEach((doc) => {
@@ -34,7 +34,7 @@ var processDeletions = function (opts) {
             })
             callback()
           } else {
-            var r = {
+            const r = {
               method: 'POST',
               url: opts.url.replace(/\/[^/]+$/, '/_bulk_docs'),
               json: true,
@@ -74,10 +74,10 @@ var processDeletions = function (opts) {
 }
 
 // opts - { url: '' , keep: '', batch: 100, verbose: false }
-var decon = function (opts) {
-  var doc = null
-  var deletions = []
-  var found = false
+const decon = function (opts) {
+  let doc = null
+  const deletions = []
+  let found = false
 
   // defaults
   if (typeof opts.batch === 'undefined') {
@@ -112,7 +112,7 @@ var decon = function (opts) {
     }
 
     // generate a list of revisions to delete
-    for (var i in doc._conflicts) {
+    for (let i in doc._conflicts) {
       if (doc._conflicts[i] !== opts.keep) {
         deletions.push({_id: doc._id, _rev: doc._conflicts[i], _deleted: true})
       } else {
