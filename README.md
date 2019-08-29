@@ -29,6 +29,8 @@ Fetching document
 
 You may also supply a URL with credentials e.g. `https://U:P@host.cloudant.com/mydb/mydoc`.
 
+Alternatively, if you are using IAM authentication with IBM Cloudant, then supply an `IAM_API_KEY`  environment variable containing your IAM API KEY. Your URK (without credentials) will be supplied as the `-u`/`--url` parameter.
+
 If you wish to keep a revision other than the current winning revision, simply pass the revision token as a `-k`/`--keep` parameter:
 
 ```sh

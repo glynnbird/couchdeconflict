@@ -1,12 +1,15 @@
 
 const request = require('request-promise')
 const async = require('async')
+const iam = require('./iam.js')
+const headers = {}
 
 const getDoc = function (url) {
   return request({
     method: 'get',
     json: true,
     url: url,
+    headers: headers,
     qs: {
       conflicts: true
     }
@@ -38,6 +41,7 @@ const processDeletions = function (opts) {
               method: 'POST',
               url: opts.url.replace(/\/[^/]+$/, '/_bulk_docs'),
               json: true,
+              headers: headers,
               body: { docs: b }
             }
             if (opts.verbose) {
@@ -100,7 +104,12 @@ const decon = function (opts) {
     console.log('options: ' + JSON.stringify({url: opts.url.replace(/\/\/(.*)@/, '//###:###@'), keep: opts.keep, batch: opts.batch}))
     console.log('Fetching document')
   }
-  return getDoc(opts.url).then((d) => {
+  return iam.getToken(process.env.IAM_API_KEY).then((t) => {
+    if (t) {
+      headers.Authorization = 'Bearer ' + t
+    }
+    return getDoc(opts.url)
+  }).then((d) => {
     doc = d
 
     // if the document has no conflicts, there's nothing to do
