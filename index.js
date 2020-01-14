@@ -101,7 +101,7 @@ const decon = function (opts) {
   if (opts.verbose) {
     console.log('couchdeconflict')
     console.log('---------------')
-    console.log('options: ' + JSON.stringify({url: opts.url.replace(/\/\/(.*)@/, '//###:###@'), keep: opts.keep, batch: opts.batch}))
+    console.log('options: ' + JSON.stringify({ url: opts.url.replace(/\/\/(.*)@/, '//###:###@'), keep: opts.keep, batch: opts.batch }))
     console.log('Fetching document')
   }
   return iam.getToken(process.env.IAM_API_KEY).then((t) => {
@@ -121,9 +121,9 @@ const decon = function (opts) {
     }
 
     // generate a list of revisions to delete
-    for (let i in doc._conflicts) {
+    for (const i in doc._conflicts) {
       if (doc._conflicts[i] !== opts.keep) {
-        deletions.push({_id: doc._id, _rev: doc._conflicts[i], _deleted: true})
+        deletions.push({ _id: doc._id, _rev: doc._conflicts[i], _deleted: true })
       } else {
         found = true
       }
@@ -131,7 +131,7 @@ const decon = function (opts) {
     // delete the current winner if required
     if (opts.keep) {
       if (doc._rev !== opts.keep) {
-        deletions.push({_id: doc._id, _rev: doc._rev, _deleted: true})
+        deletions.push({ _id: doc._id, _rev: doc._rev, _deleted: true })
       } else {
         found = true
       }
