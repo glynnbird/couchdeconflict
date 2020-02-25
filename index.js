@@ -1,19 +1,17 @@
 
-const request = require('request-promise')
+const axios = require('axios').default
 const async = require('async')
 const iam = require('./iam.js')
 const headers = {}
 
 const getDoc = function (url) {
-  return request({
+  const req = {
     method: 'get',
-    json: true,
     url: url,
     headers: headers,
-    qs: {
-      conflicts: true
-    }
-  })
+    params: { conflicts: true }
+  }
+  return axios(req).then(r => { return r.data })
 }
 
 // opts - { url: '' , keep: '', batch: 100, verbose: false, deletions: [] }
@@ -38,16 +36,16 @@ const processDeletions = function (opts) {
             callback()
           } else {
             const r = {
-              method: 'POST',
+              method: 'post',
               url: opts.url.replace(/\/[^/]+$/, '/_bulk_docs'),
-              json: true,
               headers: headers,
-              body: { docs: b }
+              data: { docs: b }
             }
             if (opts.verbose) {
               progress(deletionCount, deletionAim)
             }
-            request(r).then((data) => {
+            axios(r).then((response) => {
+              const data = response.data
               deletionCount += b.length
               callback(null, data)
             }).catch((e) => {
