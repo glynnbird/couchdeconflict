@@ -27,7 +27,7 @@
   "homepage": "https://github.com/glynnbird/couchdeconflict#readme",
   "dependencies": {
     "async": "^2.6.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "ccurllib": "^1.0.3",
     "debug": "^4.1.1",
     "yargs": "^15.1.0"
