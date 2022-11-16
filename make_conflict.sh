@@ -1,5 +1,5 @@
 #!/bin/bash
-URL='http://admin:admin@localhost:5984/mydb'
+URL="$COUCH_URL/conflicts"
 curl -X DELETE "$URL"
 curl -X PUT "$URL"
 #JSON='{"new_edits":false,"docs":[{"_id":"mydoc","_rev":"1-1","a":0},{"_id":"mydoc","_rev":"1-2","a":1},{"_id":"mydoc","_rev":"1-3","a":2}]}'

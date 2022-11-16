@@ -1,5 +1,5 @@
 
-const axios = require('axios').default
+const axios = require('axios')
 const async = require('async')
 const iam = require('./iam.js')
 const headers = {}
@@ -11,7 +11,7 @@ const getDoc = function (url) {
     headers: headers,
     params: { conflicts: true }
   }
-  return axios(req).then(r => { return r.data })
+  return axios.request(req).then(r => { return r.data })
 }
 
 // opts - { url: '' , keep: '', batch: 100, verbose: false, deletions: [] }
