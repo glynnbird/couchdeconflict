@@ -1,36 +1,79 @@
 #!/usr/bin/env node
 
-var decon = require('../index.js')
-var url = require('url')
-
-var die = function (msg, errCode) {
+const decon = require('../index.js')
+const url = require('url')
+const die = function (msg, errCode) {
   console.error('ERROR:' + msg)
   process.exit(errCode)
 }
-// get command-line arguements
-var argv = require('yargs')
-  .option('url', { alias: 'u', describe: 'CouchDB URL of document to change e.g. http://localhost:5984/mydb/mydoc', demandOption: true })
-  .option('batch', { alias: 'b', describe: 'The batch size of deletions to perform in one HTTP call', demandOption: false, default: 100 })
-  .option('keep', { alias: 'k', describe: 'Keep this revision', demandOption: false, default: null })
-  .option('verbose', { alias: 'v', describe: 'Show running commentary', demandOption: false, default: true })
-  .option('dryrun', { alias: 'd', describe: 'Output what would be done without actually doing it', demandOption: false, default: false })
-  .help('help')
-  .argv
+const syntax =
+`Syntax:
+--url/-u                            CouchDB URL                                             (required)
+--batch/-b                          The batch size of deletions to perform in one HTTP call (default: 100)
+--keep/-k                           Keep this revision
+--verbose/-v                        Show running commentary                                 (default: true)
+--dryrun/-d                         Output what would be done without actually doing it     (default: false)
+`
+const { parseArgs } = require('node:util')
+const argv = process.argv.slice(2)
+const options = {
+  url: {
+    type: 'string',
+    short: 'u'
+  },
+  batch: {
+    type: 'string',
+    short: 'b',
+    default: '100'
+  },
+  keep: {
+    type: 'string',
+    short: 'k'
+  },
+  verbose: {
+    type: 'boolean',
+    short: 'v',
+    default: true
+  },
+  dryrun: {
+    type: 'boolean',
+    short: 'd',
+    default: false
+  },
+  help: {
+    type: 'boolean',
+    short: 'h',
+    default: false
+  }
+}
+
+// parse command-line options
+const { values } = parseArgs({ argv, options })
+
+// help mode
+if (values.help) {
+  console.log(syntax)
+  process.exit(0)
+}
+
+
+// parse batch size
+values.batch = parseInt(values.batch)
 
 // parse and check the url
-var parsed = new url.URL(argv.url)
+const parsed = new url.URL(values.url)
 if (!parsed.protocol) {
   die('url is not valid HTTP/HTTPS URL', 1)
 }
-var slashes = parsed.pathname.match(/\//g)
+const slashes = parsed.pathname.match(/\//g)
 if (!slashes || slashes.length !== 2) {
   die('url must contain path to document e.g. http://localhost:5984/mydb/mydoc', 2)
 }
 
 // deconflict the document
-decon(argv).then((data) => {
+decon(values).then((data) => {
   console.log(data + ' conflicts deleted')
 }).catch((e) => {
   console.log(e.message)
-  process.exit(-1)
+  process.exit(1)
 })

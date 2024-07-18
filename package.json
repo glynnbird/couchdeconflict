@@ -1,14 +1,12 @@
 {
   "name": "couchdeconflict",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CouchDB conflict cleanup utility",
   "main": "index.js",
   "bin": {
     "couchdeconflict": "bin/couchdeconflict.bin.js"
   },
   "scripts": {
-    "codestylefix": "standard --fix index.js bin/*.js",
-    "codestyle": "standard index.js bin/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,12 +25,10 @@
   "homepage": "https://github.com/glynnbird/couchdeconflict#readme",
   "dependencies": {
     "async": "^2.6.1",
-    "axios": "^1.1.3",
-    "ccurllib": "^1.2.0",
-    "debug": "^4.3.4",
-    "yargs": "^17.6.2"
+    "axios": "^1.7.2",
+    "ccurllib": "^1.2.0"
   },
-  "devDependencies": {
-    "standard": "^17.0.0"
+  "engines": {
+    "node": ">18.0.0"
   }
 }
