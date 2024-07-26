@@ -56,7 +56,6 @@ if (values.help) {
   process.exit(0)
 }
 
-
 // parse batch size
 values.batch = parseInt(values.batch)
 
