@@ -1,20 +1,19 @@
 const ccurllib = require('ccurllib')
 const headers = {}
 
-// fetch the document in question. If iamApiKey is supplied then
-// IAM auth is used to get a bearer token for subsequent calls.
-const getDoc = async (url, iamApiKey) => {
+// fetch the document in question.
+const getDoc = async (url) => {
   const req = {
     method: 'get',
     url,
     headers,
     qs: { conflicts: true }
   }
-  return ccurllib.iamRequest(req, iamApiKey)
+  return ccurllib.request(req)
 }
 
 // opts - { url: '' , keep: '', batch: 100, verbose: false, deletions: [] }
-const processDeletions = async (opts, iamApiKey) => {
+const processDeletions = async (opts) => {
   const deletionAim = opts.deletions.length
   let deletionCount = 0
   const progress = function (x, y) {
@@ -38,7 +37,7 @@ const processDeletions = async (opts, iamApiKey) => {
           headers,
           data: { docs: b }
         }
-        await ccurllib.iamRequest(r, iamApiKey)
+        await ccurllib.request(r)
         deletionCount += b.length
         if (opts.verbose) {
           progress(deletionCount, deletionAim)
@@ -79,10 +78,11 @@ const decon = async (opts) => {
     console.log('options: ' + JSON.stringify({ url: opts.url.replace(/\/\/(.*)@/, '//###:###@'), keep: opts.keep, batch: opts.batch }))
     console.log('Fetching document')
   }
-  doc = await getDoc(opts.url, process.env.IAM_API_KEY)
-  if (doc.error) {
-    throw new Error(doc.reason)
+  doc = await getDoc(opts.url)
+  if (doc.status >= 400) {
+    throw new Error("Could not fetch document")
   }
+  doc = doc.result
 
   // if the document has no conflicts, there's nothing to do
   if (!doc._conflicts) {
@@ -125,7 +125,7 @@ const decon = async (opts) => {
 
   // perform deletions
   opts.deletions = deletions
-  const retval = await processDeletions(opts, process.env.IAM_API_KEY)
+  const retval = await processDeletions(opts)
   return retval
 }
 
